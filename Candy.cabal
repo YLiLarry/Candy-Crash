@@ -65,11 +65,18 @@ executable Candy
   -- Base language which the package is written in.
   default-language:    Haskell2010
 
-test-suite all
+test-suite board
     type:                exitcode-stdio-1.0
     ghc-options:         -isrc
     hs-source-dirs:      test
-    main-is:             Main.hs
+    main-is:             Board.hs
     default-language:    Haskell2010
     build-depends:       base, HUnit, array
-  
+
+test-suite io
+    type:                exitcode-stdio-1.0
+    ghc-options:         -isrc
+    hs-source-dirs:      test
+    main-is:             Board.hs
+    default-language:    Haskell2010
+    build-depends:       base, HUnit, array
