@@ -1,21 +1,21 @@
 module Game.IO where
 
-class PrettyShow p where
-    prettyShow :: p -> String
+class Pretty p where
+    -- | Convert to a pretty formatted string
+    pretty :: p -> String
 
 class Parsable p where
+    -- | Convert a formatted string to a type
     parse :: String -> p
     
-    ---- pretty format board
-    --showBoard :: board -> String
-    --showBoard board = unlines [ unwords [ prettyShow $ board ! (a,b) | b <- [1..y] ] | a <- [1..x] ] 
-    --    where
-    --        (_,(x,y)) = bounds board 
-
+    -- | Convert a char to a type, a shorthand when the string is just one character
+    parseC :: Char -> p
+    parseC = parse . (:[])
     
---instance Parsable Board where
---    parse str = Board $ listArray ((1,1),(x,y)) $ fmap parse $ words str
---        where
---            ls@(z:_) = map words $ lines str
---            x        = length ls
---            y        = length z
+instance (Parsable a) => Parsable (Maybe a) where
+    parse "_" = Nothing
+    parse x = Just (parse x)
+
+instance (Pretty a) => Pretty (Maybe a) where
+    pretty Nothing  = "_"
+    pretty (Just x) = pretty x
