@@ -5,6 +5,7 @@ module Game.Board.IArray (
 
 import Game.Board
 import Data.Array.IArray as IA 
+import Control
 
 newtype Board = Board (Array Cord Block) deriving (Show, Eq)
 instance BoardLike Board where
@@ -19,3 +20,4 @@ instance Pretty Board where
 instance Parsable Board where
     parse = readBoard
 
+instance Control Board

@@ -1,8 +1,14 @@
 module Main where
     
+import Game
+import Game.IO
+import System.Random
+import Control.Monad
+import Control
 import Game.Board.IArray
 
 main = do
-    b <- return (parse "1_h 2r_\n 3_v 4_s\n" :: Board)
-    print $ b
+    b <- return $ (parse "1f_ 1f_ 1r_\n1r_ 1r_ 1r_\n1r_ 1r_ 1r_\n" :: Board)
     putStr $ pretty b
+    interact $ unlines . map (pretty . fst . (flip $ command $ mkStdGen 1) b) . lines
+    

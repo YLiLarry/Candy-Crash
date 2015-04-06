@@ -6,9 +6,10 @@ module Game.Block (
 import Game.IO
 import Game.Match
 import Game.Block.Color
+import Game.Random
 
 data Block = Block { 
-    blockColor   :: Maybe Color, 
+    blockColor   :: Color, 
     blockRemoved :: Bool, 
     blockEffect  :: Maybe Effect
 } deriving (Eq, Show)
@@ -21,8 +22,25 @@ instance Parsable Block where
 
 instance Parsable Bool where
     parse "r" = True
-    parse "_" = False
+    parse _   = False
 
 instance Pretty Bool where
     pretty True  = "r"
     pretty False = "_"
+    
+randomBlock :: (RandomGen g) => g -> (Block,g)
+randomBlock g = (b,g') 
+    where
+        b = Block {
+                blockColor   = c,
+                blockRemoved = False,
+                blockEffect  = Nothing
+            }
+        (c,g') = randomColor g
+        
+randomBlocks :: (RandomGen g) => g -> [Block]
+randomBlocks = randoms 
+
+instance Random Block where
+    randomR = undefined
+    random  = randomBlock

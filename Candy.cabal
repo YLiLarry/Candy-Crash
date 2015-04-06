@@ -46,18 +46,18 @@ build-type:          Simple
 cabal-version:       >=1.10
 
 
-executable Candy
+executable main
   -- .hs or .lhs file containing the Main module.
   main-is:             Main.hs
   
   -- Modules included in this executable, other than Main.
-  -- other-modules:       
+  -- other-modules:        
   
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:    
   
   -- Other library packages from which modules are imported.
-  build-depends:       base >=4.7 && <4.8, array >=0.5 && <0.6, HUnit >=1.2 && <1.3
+  build-depends:       base >=4.7 && <4.8, array >=0.5 && <0.6, HUnit >=1.2 && <1.3, random
   
   -- Directories containing source files.
   hs-source-dirs:      src
@@ -65,18 +65,15 @@ executable Candy
   -- Base language which the package is written in.
   default-language:    Haskell2010
 
-test-suite board
-    type:                exitcode-stdio-1.0
-    ghc-options:         -isrc
-    hs-source-dirs:      test
+executable test-board
+    hs-source-dirs:      test, src
     main-is:             Board.hs
     default-language:    Haskell2010
-    build-depends:       base, HUnit, array
+    build-depends:       base, HUnit, array, random
 
-test-suite io
-    type:                exitcode-stdio-1.0
-    ghc-options:         -isrc
-    hs-source-dirs:      test
-    main-is:             Board.hs
+executable test-io
+    hs-source-dirs:      test, src
+    main-is:             IO.hs
     default-language:    Haskell2010
-    build-depends:       base, HUnit, array
+    build-depends:       base, HUnit, array, random
+    

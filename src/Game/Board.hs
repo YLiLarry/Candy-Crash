@@ -10,9 +10,18 @@ import Game.Match
 import Game.Block
 import Game.IO
 import Game.Board.Cord
+import Game.Random
 import Control.Applicative
+import Debug.Trace
+import Prelude hiding (Right)
 
-class BoardLike board where
+
+data Direction = Down | Right
+instance Parsable Direction where
+    parse "d" = Down 
+    parse "r" = Right 
+
+class (Pretty board) => BoardLike board where
     
     create :: (Int,Int) -> [Block] -> board
     
@@ -31,13 +40,6 @@ class BoardLike board where
         where
             center      = matchCenter m cord
             Block c r _ = board ! center
-            
-    --gameStart:: Int -> board
-    --gameStart size = listArray ((1,1),(size,size)) randomBoard
-    --    where
-    --        randomBoard:: [Block]
-    --        randomBoard = []
-
 
     -- | Check if an area is the same color
     sameColor :: [Cord] -> board -> Bool
@@ -46,7 +48,7 @@ class BoardLike board where
             f = flip colorAt board
 
     -- | Get the color at the cord
-    colorAt :: Cord -> board -> Maybe Color
+    colorAt :: Cord -> board -> Color
     colorAt cord board = blockColor $ board ! cord
 
     -- | Set a given area to empty
@@ -83,13 +85,13 @@ class BoardLike board where
     -- | Get a list of all cords of the board
     allCords :: board -> [Cord]
     allCords board = let (x,y) = size board in [ (a,b) | a<-[1..x], b<-[1..y] ]
-
+                                                                            
     -- | Convert a board to a pretty formatted string
     showBoard :: board -> String
     showBoard board = unlines [ unwords [ pretty $ get (a,b) board | b <- [1..y] ] | a <- [1..x] ] 
         where
             (x,y) = size board 
-
+                                                                    
     -- | Parse a string to a square board according to linebreaks.
     -- For example, "1 2\n 3 4\n" is parsed to (create (2,2) [1,2,3,4])
     readBoard :: String -> board
@@ -98,3 +100,24 @@ class BoardLike board where
             ls@(z:_) = map words $ lines str
             x        = length ls
             y        = length z
+                                                        
+    swap :: Cord -> Direction -> board -> board
+    swap c@(x,y) dir board = board // [(c,b'), (c',b)]
+        where
+            c' = case dir of
+                 Down  -> (x+1,y)
+                 Right -> (x,y+1)
+            b  = board ! c
+            b' = board ! c'
+                                                            
+    fill :: (RandomGen g) => g -> board -> (board,g)
+    fill g board = trace (pretty b) (b,g'')
+        where
+            b = board // traceShow l l
+            l = zip (filter (blockRemoved . (!) board) 
+                            (allCords board))
+                    (randomBlocks g')
+            (g',g'') = split g
+
+
+                                                  

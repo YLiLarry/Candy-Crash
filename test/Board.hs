@@ -3,6 +3,8 @@ import Test.HUnit.Text
 import Control.Monad
 import Game.Board.IArray
 import Data.Array.IArray (listArray)
+import System.Exit
+import Prelude hiding (Right)
 
 createBoard size ls = create size ls :: Board
 
@@ -62,9 +64,22 @@ unitTests = TestList [
                 (setBonusAt (2,2) h4 board) @?= (board // [((2,3), Block (Just C1) False (Just Horizontal))]),
             TestCase $
                 (setBonusAt (2,2) s3 board) @?= (board // [((3,3), Block (Just C1) False (Just Square))])
+        ],
+        
+        TestLabel "swap" $ TestList [
+            TestCase $
+                (swap (0,0) Down $ parse "1__ 2r_ \n 3_v 4rs" :: Board)
+                @?=
+                (parse "3_v 2r_ \n 1__ 4rs" :: Board)
+          , TestCase $
+                (swap (1,0) Right $ parse "1__ 2r_ \n 3_v 4rs" :: Board)
+                @?=
+                (parse "1__ 2r_ \n 4rs 3_v" :: Board)
         ]
         
     ]
 
 main = do
-    void.runTestTT $ unitTests
+    x <- runTestTT $ unitTests
+    if (failures x > 0) then exitFailure else exitSuccess
+
