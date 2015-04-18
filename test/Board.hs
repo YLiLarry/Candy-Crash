@@ -26,22 +26,22 @@ unitTests = TestList [
         ],
         
         TestLabel "clear" $ TestList [
-            let a = Block (Just C1) False Nothing in
-            let b = Block (Just C1) True Nothing in
+            let a = Block C1 False Nothing in
+            let b = Block C1 True Nothing in
             (clear [ (x,y) | x <- [1..3], y <- [1..3] ] (createBoard (3,3) $ repeat a))
             ~?= 
             (createBoard (3,3) $ repeat b)
         ],
         
         TestLabel "colorAt" $ TestList [
-            let a = Block (Just C1) False Nothing in
+            let a = Block C1 False Nothing in
             (colorAt (1,1) (createBoard (3,3) $ repeat a))
             ~?= 
-            (Just C1)
+            C1
         ],
         
-        let a = Block (Just C1) False Nothing in
-        let b = Block (Just C2) False Nothing in
+        let a = Block C1 False Nothing in
+        let b = Block C2 False Nothing in
         TestLabel "sameColor" $ TestList [
             (sameColor [ (x,y) | x <- [1..3], y <- [1..3] ] $ createBoard (3,3) $ repeat a)
             ~?= 
@@ -51,7 +51,7 @@ unitTests = TestList [
             False
         ],
         
-        let a     = Block (Just C1) False Nothing in
+        let a     = Block C1 False Nothing in
         let board = createBoard (5,5) $ repeat a in
         TestLabel "setBonusAt" $ TestList [
             TestCase $
@@ -59,11 +59,11 @@ unitTests = TestList [
             TestCase $
                 (setBonusAt (1,1) h3 board) @?= (board),
             TestCase $
-                (setBonusAt (2,2) v4 board) @?= (board // [((3,2), Block (Just C1) False (Just Vertical))]),
+                (setBonusAt (2,2) v4 board) @?= (board // [((3,2), Block C1 False (Just Vertical))]),
             TestCase $
-                (setBonusAt (2,2) h4 board) @?= (board // [((2,3), Block (Just C1) False (Just Horizontal))]),
+                (setBonusAt (2,2) h4 board) @?= (board // [((2,3), Block C1 False (Just Horizontal))]),
             TestCase $
-                (setBonusAt (2,2) s3 board) @?= (board // [((3,3), Block (Just C1) False (Just Square))])
+                (setBonusAt (2,2) s3 board) @?= (board // [((3,3), Block C1 False (Just Square))])
         ],
         
         TestLabel "swap" $ TestList [

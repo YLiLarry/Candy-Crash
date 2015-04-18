@@ -19,7 +19,9 @@ import Prelude hiding (Right)
 data Direction = Down | Right
 instance Parsable Direction where
     parse "d" = Down 
+    parse "down" = Down 
     parse "r" = Right 
+    parse "right" = Right 
 
 class (Pretty board) => BoardLike board where
     
@@ -110,14 +112,13 @@ class (Pretty board) => BoardLike board where
             b  = board ! c
             b' = board ! c'
                                                             
-    fill :: (RandomGen g) => g -> board -> (board,g)
-    fill g board = trace (pretty b) (b,g'')
+    fill :: (RandomGen g) => (board,g) -> (board,g)
+    fill (board,g) = (b,g'')
         where
-            b = board // traceShow l l
+            b = board // l
             l = zip (filter (blockRemoved . (!) board) 
                             (allCords board))
                     (randomBlocks g')
             (g',g'') = split g
-
 
                                                   

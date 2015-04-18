@@ -4,6 +4,8 @@ import Game.IO
 import Game.Random
 import System.Random
 
+import Debug.Trace
+
 data Color = C1 | C2 | C3 | C4 deriving (Eq, Show, Enum)
 
 instance Parsable Color where

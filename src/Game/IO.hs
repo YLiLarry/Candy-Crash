@@ -1,6 +1,6 @@
 module Game.IO where
 
-class Pretty p where
+class (Show p) => Pretty p where
     -- | Convert to a pretty formatted string
     pretty :: p -> String
 
